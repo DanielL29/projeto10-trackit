@@ -20,7 +20,7 @@ export default function SignUp() {
         e.preventDefault()
         setLoading(true)
         const promise = axios.post(`${API_BASE_URL}/auth/sign-up`, signUp)
-        promise.then(res => {
+        promise.then(() => {
             setLoading(false)
             navigate('/')
         })
