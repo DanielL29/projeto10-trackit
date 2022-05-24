@@ -50,4 +50,9 @@ export const GlobalStyle = createGlobalStyle`
         font-family: 'Lexend Deca', sans-serif;
         background-color: ${({ isLogin }) => isLogin ? '#f2f2f2' : '#fff'};
     }
+
+    * {
+        box-sizing: border-box;
+        font-family: 'Lexend Deca', sans-serif;
+    }
 `
