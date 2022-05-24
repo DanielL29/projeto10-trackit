@@ -48,5 +48,6 @@ export const GlobalStyle = createGlobalStyle`
     body {
         box-sizing: border-box;
         font-family: 'Lexend Deca', sans-serif;
+        background-color: ${({ isLogin }) => isLogin ? '#f2f2f2' : '#fff'};
     }
 `

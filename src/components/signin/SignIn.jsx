@@ -1,8 +1,9 @@
 import axios from 'axios'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { ThreeDots } from 'react-loader-spinner'
 import { Link, useNavigate } from 'react-router-dom'
 import logo from '../../assets/images/logo.jpeg'
+import UserContext from '../../context/UserContext'
 import { API_BASE_URL } from '../../mock/data'
 import { Login } from './SignInStyle'
 
@@ -10,13 +11,15 @@ export default function SignIn() {
     const [signIn, setSignIn] = useState({ email: '', password: '' })
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
+    const { setUser } = useContext(UserContext)
 
     function signInUser(e) {
         e.preventDefault()
         setLoading(true)
         const promise = axios.post(`${API_BASE_URL}/auth/login`, signIn)
-        promise.then(() => {
+        promise.then(res => {
             setLoading(false)
+            setUser({ image: res.data.image, token: res.data.token })
             navigate('/hoje')
         })
         promise.catch(res => {
