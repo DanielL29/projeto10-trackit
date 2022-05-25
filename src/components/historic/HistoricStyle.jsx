@@ -10,8 +10,26 @@ export const HistoricContainer = styled.div`
         margin-bottom: 17px;
     }
 
-    p {
-        font-size: 18px;
-        color: #666666;
+    .green {
+        background-color: #8CC654;
+        padding: 8px 10px;
+        border-radius: 100%;
+    }
+
+    .red {
+        background-color: #E25666;
+        padding: 8px 10px;
+        border-radius: 100%;
+    }
+
+    .calendar {
+        border: none;
+        border-radius: 10px;
+        width: 335px;
+        height: 402px;
+    }
+
+    .calendar .react-calendar__month-view__days button {
+        height: 62px;
     }
 `
