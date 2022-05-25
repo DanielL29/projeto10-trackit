@@ -19,6 +19,10 @@ export const MyHabits = styled.div`
     }
 
     button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
         width: 40px;
         height: 35px;
         background-color: #52B6FF;
@@ -32,6 +36,11 @@ export const MyHabits = styled.div`
 
     button:hover {
         filter: brightness(0.90);
+    }
+
+    span {
+        height: 100%;
+        margin-top: -7px;
     }
 `
 

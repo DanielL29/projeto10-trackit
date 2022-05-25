@@ -92,7 +92,7 @@ export default function Habits() {
         <HabitsContainer>
             <MyHabits>
                 <h1>Meus hábitos</h1>
-                <button onClick={() => setCreating(true)}>+</button>
+                <button onClick={() => setCreating(true)}><span>+</span></button>
             </MyHabits>
             {creating ? (
                 <HabitCard disable={loading}>
