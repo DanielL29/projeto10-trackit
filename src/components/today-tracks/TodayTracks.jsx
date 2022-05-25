@@ -70,7 +70,7 @@ export default function TodayTracks() {
     return (
         <TodayContainer>
             <h1>{formatDate()}</h1>
-            {progress === 0 ? <h3>Nenhum hábito concluído ainda</h3> : <h3 className="progress">{progress}% dos hábitos concluidos </h3>}
+            {progress === 0 || todayHabits.length === 0 ? <h3>Nenhum hábito concluído ainda</h3> : <h3 className="progress">{progress}% dos hábitos concluidos </h3>}
             {todayHabits.length === 0 ? <p>Nenhum habito para este dia...</p> : (
                 <div>
                     {todayHabits.map(today => 
