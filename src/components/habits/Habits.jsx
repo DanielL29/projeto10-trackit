@@ -124,7 +124,7 @@ export default function Habits() {
                                             counter++
                                         } 
                                         return (
-                                            <Day key={day.id} selected={selected}>{day.name}</Day>
+                                            <Day key={day.id} selected={selected} readOnly>{day.name}</Day>
                                         )
                                     })}
                                 </div>

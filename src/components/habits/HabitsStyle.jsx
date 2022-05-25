@@ -54,6 +54,7 @@ export const HabitCard = styled.div`
     border-radius: 5px;
     padding: 18px;
     margin-left: 17px;
+    margin-bottom: 10px;
     box-sizing: border-box;
 
     div {
@@ -93,11 +94,13 @@ export const Day = styled.button`
     color: ${({ selected }) => selected ? '#fff' : '#dbdbdb'};
     margin-right: 4px;
 
-
-    cursor: pointer;
-    &:hover {
-        filter: brightness(0.9);
-    }
+    ${({ readOnly }) => !readOnly ? (`
+        cursor: pointer;
+        &:hover {
+            filter: brightness(0.9);
+        }
+    `
+    ) : ''}
 `
 
 export const Buttons = styled.div`
