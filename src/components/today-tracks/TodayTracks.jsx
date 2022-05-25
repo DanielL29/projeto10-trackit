@@ -3,7 +3,7 @@ import { TodayContainer, TrackCard } from "./TodayTracksStyle"
 import check from '../../assets/images/check.png'
 import { useState, useEffect, useContext } from "react"
 import axios from "axios"
-import { API_BASE_URL } from './../../mock/data';
+import { API_BASE_URL, config } from './../../mock/data';
 import UserContext from '../../context/UserContext'
 import ProgressContext from "../../context/ProgressContext"
 
@@ -26,21 +26,15 @@ export default function TodayTracks() {
     const [todayHabits, setTodayHabits] = useState([])
     const { user } = useContext(UserContext)
     const weekDayNames = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta"]
-    const { progress, setProgress } = useContext(ProgressContext)
-    const config = {
-        headers: {
-            "Authorization": `Bearer ${user.token}`
-        }
-    }
+    const { progress } = useContext(ProgressContext)
 
     useEffect(() => {
         getTodayHabits()
-        getProgress()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [todayHabits])
 
     function getTodayHabits() {
-        const promise = axios.get(`${API_BASE_URL}/habits/today`, config)
+        const promise = axios.get(`${API_BASE_URL}/habits/today`, config(user))
         promise.then(res => setTodayHabits(res.data))
     }
 
@@ -54,17 +48,8 @@ export default function TodayTracks() {
 
     function unCheckOrCheckHabit(id, done) {
         const isDone = done ? 'uncheck' : 'check'
-        const promise = axios.post(`${API_BASE_URL}/habits/${id}/${isDone}`, {}, config)
+        const promise = axios.post(`${API_BASE_URL}/habits/${id}/${isDone}`, {}, config(user))
         promise.catch(res => console.log(res.response.data))
-    }
-
-    function getProgress() {
-        let counter = 0
-        for(let i = 0; i < todayHabits.length; i++) {
-            if(todayHabits[i].done === true) counter++
-        }
-        counter = Math.round(counter * 100 / todayHabits.length)
-        setProgress(counter)
     }
 
     return (

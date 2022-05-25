@@ -9,3 +9,11 @@ export const weekDays = [
     { id: 5, name: 'S', selected: false },
     { id: 6, name: 'S', selected: false },
 ]
+
+export const config = (user) => {
+    return {
+        headers: {
+            "Authorization": `Bearer ${user.token}`
+        }
+    }
+}

@@ -4,7 +4,7 @@ import Calendar from "react-calendar";
 import 'react-calendar/dist/Calendar.css';
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { API_BASE_URL } from './../../mock/data';
+import { API_BASE_URL, config } from './../../mock/data';
 import UserContext from '../../context/UserContext'
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -19,18 +19,13 @@ export default function Historic() {
     }, [historic])
 
     function getHistoric() {
-        const config = {
-            headers: {
-                "Authorization": `Bearer ${user.token}`
-            }
-        }
-
-        const promise = axios.get(`${API_BASE_URL}/habits/history/daily`, config)
+        const promise = axios.get(`${API_BASE_URL}/habits/history/daily`, config(user))
         promise.then(res => setHistoric(res.data))
     }
 
     function formatDate(date) {
-        const formattedDate = dayjs(date).format().split('T')[0].split('-').reverse().join('/')
+        const formattedDate = dayjs(date).format("DD/MM/YYYY")
+        const day = formattedDate.split('/')[0]
         for (let i = 0; i < historic.length; i++) {
             let counter = 0
             if (formattedDate === historic[i].day) {
@@ -39,13 +34,13 @@ export default function Historic() {
                 }
 
                 if (counter === historic[i].habits.length) {
-                    return <p className="green">{formattedDate.split('/')[0]}</p>
+                    return <p className="green">{day}</p>
                 } else {
-                    return <p className="red">{formattedDate.split('/')[0]}</p>
+                    return <p className="red">{day}</p>
                 }
             }
         }
-        return formattedDate.split('/')[0]
+        return day
     }
 
     function renderDayHabits(habit) {
@@ -62,7 +57,7 @@ export default function Historic() {
     }
 
     function showDayHabits(date) {
-        const formattedDate = dayjs(date).format().split('T')[0].split('-').reverse().join('/')
+        const formattedDate = dayjs(date).format("DD/MM/YYYY")
         for (let i = 0; i < historic.length; i++) {
             if (formattedDate === historic[i].day) {
                 toast(<div>{renderDayHabits(historic[i].habits)}</div>, 
@@ -79,7 +74,7 @@ export default function Historic() {
     return (
         <HistoricContainer>
             <h1>Histórico</h1>
-            <Calendar className="calendar" locale="pt-BR" formatDay={(locale, date) => formatDate(date)} onClickDay={(date) => showDayHabits(date)} />
+            <Calendar className="calendar" locale="pt-BR" formatDay={(_, date) => formatDate(date)} onClickDay={(date) => showDayHabits(date)} />
             <ToastContainer />
         </HistoricContainer>
     )
