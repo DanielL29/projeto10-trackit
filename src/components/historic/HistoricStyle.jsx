@@ -12,13 +12,13 @@ export const HistoricContainer = styled.div`
 
     .green {
         background-color: #8CC654;
-        padding: 8px 10px;
+        padding: 9px;
         border-radius: 100%;
     }
 
     .red {
         background-color: #E25666;
-        padding: 8px 10px;
+        padding: 9px;
         border-radius: 100%;
     }
 
@@ -31,5 +31,11 @@ export const HistoricContainer = styled.div`
 
     .calendar .react-calendar__month-view__days button {
         height: 62px;
+    }
+
+    .day-habits {
+        position: absolute;
+        margin-top: -50px;
+        margin-left: 50px;
     }
 `
