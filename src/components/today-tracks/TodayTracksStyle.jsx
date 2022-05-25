@@ -3,6 +3,7 @@ import styled from 'styled-components'
 export const TodayContainer = styled.div`
     margin-top: 98px;
     margin-left: 17px;
+    margin-bottom: 150px;
 
     h1 {
         color: #126BA5;
@@ -32,6 +33,7 @@ export const TrackCard = styled.div`
     box-sizing: border-box;
     padding: 15px;
     color: #666666;
+    margin-bottom: 10px;
 
     h2 {
         font-size: 20px;
