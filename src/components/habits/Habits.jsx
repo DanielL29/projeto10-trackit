@@ -11,7 +11,7 @@ function DayCard({ name, daysNumbers, setDaysNumbers, index, loading, days, setD
     function chooseDay(index) {
         setSelected(!selected)
         for(let i = 0; i < daysNumbers.length; i++) {
-            if(daysNumbers[i] === index + 1) {
+            if(daysNumbers[i] === index) {
                 daysNumbers.splice(i, 1)
                 days[index].selected = false
                 setDays([...days])
@@ -20,7 +20,7 @@ function DayCard({ name, daysNumbers, setDaysNumbers, index, loading, days, setD
         }
         days[index].selected = true
         setDays([...days])
-        setDaysNumbers([...daysNumbers, index + 1])
+        setDaysNumbers([...daysNumbers, index])
     }
 
     return (
@@ -110,7 +110,7 @@ export default function Habits() {
                 </HabitCard>
             ) : ''}
             {habits.length === 0 ? <Message>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</Message> : (
-                habits.map(habit => {
+                habits.sort((a, b) => a.id - b.id).map(habit => {
                     let counter = 0
                     return (
                         <UserHabit key={habit.id}>

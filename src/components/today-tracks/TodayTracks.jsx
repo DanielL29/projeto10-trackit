@@ -65,7 +65,6 @@ export default function TodayTracks() {
         }
         counter = Math.round(counter * 100 / todayHabits.length)
         setProgress(counter)
-        console.log(user.token)
     }
 
     return (

@@ -6,14 +6,15 @@ export const HabitsContainer = styled.div`
 
 export const MyHabits = styled.div`
     display: flex;
+    justify-content: space-between;
     align-items: center;
 
     margin-left: 17px;
     margin-top: 92px;
     margin-bottom: 20px;
+    width: 340px;
 
     h1 {
-        margin-right: 152px;
         color: #126BA5;
         font-size: 23px;
     }
@@ -41,6 +42,10 @@ export const MyHabits = styled.div`
     span {
         height: 100%;
         margin-top: -7px;
+    }
+
+    @media screen and (max-width: 500px) {
+        width: 90%;
     }
 `
 
@@ -165,6 +170,7 @@ export const UserHabit = styled.div`
 
     div > div {
         display: flex;
+        flex-wrap: wrap;
     }
 
     div:last-child {
@@ -179,5 +185,9 @@ export const UserHabit = styled.div`
 
     ion-icon:hover {
         transform: scale(1.4);
+    }
+
+    @media screen and (max-width: 500px) {
+        width: 90%;
     }
 `

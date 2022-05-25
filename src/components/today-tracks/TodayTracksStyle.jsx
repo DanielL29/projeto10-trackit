@@ -63,4 +63,8 @@ export const TrackCard = styled.div`
     .record {
         color: ${({ done, equals }) => done && equals ? '#8FC549' : 'currentColor'}
     }
+
+    @media screen and (max-width: 500px) {
+        width: 95%;
+    }
 `
