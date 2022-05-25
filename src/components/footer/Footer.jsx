@@ -1,9 +1,13 @@
+import { useContext } from "react";
 import { CircularProgressbar } from "react-circular-progressbar";
 import 'react-circular-progressbar/dist/styles.css';
 import { Link } from "react-router-dom";
+import ProgressContext from "../../context/ProgressContext";
 import { FooterContainer, ProgressBar } from "./FooterStyle";
 
 export default function Footer() {
+    const { progress } = useContext(ProgressContext)
+
     return (
         <FooterContainer>
             <Link to="/habitos" style={{ textDecoration: 'none' }}>
@@ -11,7 +15,7 @@ export default function Footer() {
             </Link>
             <Link to="/hoje" style={{ textDecoration: 'none' }}>
                 <ProgressBar>
-                    <CircularProgressbar backgroundPadding={6} strokeWidth={9} value={0} text="Hoje" background />
+                    <CircularProgressbar backgroundPadding={6} strokeWidth={9} value={progress} text="Hoje" background />
                 </ProgressBar>
             </Link>
             <Link to="historico" style={{ textDecoration: 'none' }}>

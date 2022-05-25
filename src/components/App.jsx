@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import Router from '../components/Router';
+import { ProgressProvider } from '../context/ProgressContext';
 import { UserProvider } from '../context/UserContext';
 import { GlobalStyle } from './../assets/global/GlobalStyle';
 import Footer from './footer/Footer';
@@ -10,11 +11,13 @@ export default function App() {
     const isLogin = location.pathname !== '/' && location.pathname !== '/cadastro' ? true : false
 
     return (
-        <UserProvider>
-            <GlobalStyle isLogin={isLogin} />
-            {isLogin ? <Header /> : ''}
-            <Router />
-            {isLogin ? <Footer /> : ''}
-        </UserProvider>
+        <ProgressProvider>
+            <UserProvider>
+                <GlobalStyle isLogin={isLogin} />
+                {isLogin ? <Header /> : ''}
+                <Router />
+                {isLogin ? <Footer /> : ''}
+            </UserProvider>
+        </ProgressProvider>
     )
 }
