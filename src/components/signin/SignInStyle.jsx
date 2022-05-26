@@ -64,4 +64,10 @@ export const Login = styled.div`
         text-decoration: underline;
         cursor: pointer;
     }
+
+    @media screen and (max-width: 350px) {
+        input, button {
+            width: 100%;
+        }
+    }
 `

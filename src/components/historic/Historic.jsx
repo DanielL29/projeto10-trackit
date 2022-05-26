@@ -43,10 +43,10 @@ export default function Historic() {
         return day
     }
 
-    function renderDayHabits(habit) {
-        return habit.map(habit => {
+    function renderDayHabits(habits) {
+        return habits.map(habit => {
             return (
-                <p>
+                <p key={habit.id}>
                     Hábito: {habit.name} - {habit.done ? 
                         <ion-icon style={{ color: 'green' }} name="checkmark-outline"></ion-icon> : 
                         <ion-icon style={{ color: 'red' }} name="close-outline"></ion-icon>

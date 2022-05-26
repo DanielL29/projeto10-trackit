@@ -1,6 +1,10 @@
 import styled from 'styled-components'
 
 export const HistoricContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
     margin-left: 17px;
     margin-top: 98px;
 
@@ -37,5 +41,28 @@ export const HistoricContainer = styled.div`
         position: absolute;
         margin-top: -50px;
         margin-left: 50px;
+    }
+
+    @media screen and (max-width: 500px) {
+        align-items: flex-start;
+    }
+
+    @media screen and (max-width: 350px) {
+        .calendar {
+            width: 250px;
+            height: 300px;
+        }
+
+        .calendar .react-calendar__month-view__days button {
+            height: 40px;
+        }
+
+        .green {
+            padding: 5px;
+        }
+
+        .red {
+            padding: 5px;
+        }
     }
 `
