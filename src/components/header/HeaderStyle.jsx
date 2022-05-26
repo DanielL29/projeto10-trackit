@@ -17,6 +17,7 @@ export const HeaderContainer = styled.div`
     left: 0;
     padding: 0 18px;
     box-sizing: border-box;
+    z-index: 1;
 
     img {
         border-radius: 100%;
