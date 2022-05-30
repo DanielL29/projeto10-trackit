@@ -27,7 +27,7 @@ export const TrackCard = styled.div`
     justify-content: space-between;
 
     width: 340px;
-    height: 94px;   
+    min-height: 94px;   
     background-color: #FFFFFF;
     border-radius: 5px;
     box-sizing: border-box;
@@ -38,6 +38,8 @@ export const TrackCard = styled.div`
     h2 {
         font-size: 20px;
         margin-bottom: 8px;
+        width: 240px;
+        word-wrap: break-word;
     }
 
     p {

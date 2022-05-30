@@ -166,6 +166,8 @@ export const UserHabit = styled.div`
         color: #666666;
         font-size: 20px;
         margin-bottom: 8px;
+        width: 240px;
+        word-wrap: break-word;
     }
 
     div > div {
