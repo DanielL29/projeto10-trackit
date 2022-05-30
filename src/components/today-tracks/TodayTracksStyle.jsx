@@ -44,10 +44,12 @@ export const TrackCard = styled.div`
         font-size: 13px;
     }
 
-    div:last-child {
+    button {
         display: flex;
         justify-content: center;
         align-items: center;
+        outline: none;
+        border: none;
 
         width: 69px;
         height: 69px;

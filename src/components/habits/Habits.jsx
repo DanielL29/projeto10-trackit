@@ -14,13 +14,14 @@ export default function Habits() {
     const [daysNumbers, setDaysNumbers] = useState([])
     const { user } = useContext(UserContext)
     const [loading, setLoading] = useState(false)
+    const [initialLoading, setInitialLoading] = useState(true)
 
     useEffect(() => {
         getHabits()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [habits])
 
-    const getHabits = () => axios.get(`${API_BASE_URL}/habits`, config(user)).then(res => setHabits(res.data))
+    const getHabits = () => axios.get(`${API_BASE_URL}/habits`, config(user)).then(res => {setHabits(res.data);  setInitialLoading(false);})
     const deleteHabit = (id) => window.confirm('Deseja deletar este habito ?') ? axios.delete(`${API_BASE_URL}/habits/${id}`, config(user)) : false
 
     function createHabit() {
@@ -29,10 +30,10 @@ export default function Habits() {
         const promise = axios.post(`${API_BASE_URL}/habits`, habit, config(user))
         promise.then(() => {
             setLoading(false); setCreating(false);
-            setDays([...days.map(day => ({ name: day.name, selected: day.selected = false }))])
+            setDays([...days.map((day, i) => ({ id: i, name: day.name, selected: day.selected = false }))])
             setDaysNumbers([]); setName('');
         })
-        promise.catch(res => { alert(`Oops! algo deu errado...${res.response.data}`); setLoading(false);})
+        promise.catch(res => {alert(`Oops! algo deu errado...${res.response.data}`); setLoading(false);})
     }
 
     return (
@@ -68,7 +69,8 @@ export default function Habits() {
                     </Buttons>
                 </HabitCard>
             ) : ''}
-            {habits.length === 0 ? <Message>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</Message> : (
+            {initialLoading ? <ThreeDots color="#126BA5" height={50} width={50} wrapperStyle={{ marginLeft: '17px' }} /> : habits.length === 0 ? 
+                <Message>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</Message> : (
                 habits.sort((a, b) => a.id - b.id).map(habit => {
                     let counter = 0
                     return (
@@ -76,7 +78,7 @@ export default function Habits() {
                             <div>
                                 <h1>{habit.name}</h1>
                                 <div>
-                                    {weekDays.map((day, i) => {
+                                    {weekDays.map(day => {
                                         let selected = false
                                         if(habit.days[counter] === day.id) {
                                             selected = true
@@ -86,9 +88,7 @@ export default function Habits() {
                                     })}
                                 </div>
                             </div>
-                            <div onClick={() => deleteHabit(habit.id)}>
-                                <ion-icon name="trash-outline"></ion-icon>
-                            </div>
+                            <div onClick={() => deleteHabit(habit.id)}><ion-icon name="trash-outline"></ion-icon></div>
                         </UserHabit>
                     )
                 })

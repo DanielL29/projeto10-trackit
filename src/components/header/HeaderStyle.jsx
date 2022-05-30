@@ -26,3 +26,56 @@ export const HeaderContainer = styled.div`
         object-fit: cover;
     }
 `
+
+export const Perfil = styled.div`
+    display: flex;
+    align-items: center;
+    transition: all 300ms ease-in-out;
+
+    div:first-child {
+        width: 0px;
+        background-color: transparent;
+        transition: all 300ms ease-in-out;
+    }
+
+    &:hover div:first-child {
+        width: 50px;
+        background-color: #fff;
+    }
+
+    div:first-child:hover {
+        width: 120px;
+    }
+
+    img {
+        cursor: pointer;
+    }
+`
+
+export const Logout = styled.div`
+    display: flex;
+    align-items: center;
+    width: 50px;
+    font-family: 'Lexend Deca', sans-serif;
+    transition: all 300ms ease-in-out;
+    cursor: pointer;
+    color: #126BA5;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    padding: 5px;
+    margin-right: -10px;
+
+    ion-icon {
+        font-size: 30px;
+    }
+
+    p {
+        display: none;
+        margin-right: 10px;
+        font-size: 20px;
+    }
+
+    &:hover p {
+        display: initial;
+    }
+`

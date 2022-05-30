@@ -6,8 +6,12 @@ import axios from "axios"
 import { API_BASE_URL, config } from './../../mock/data';
 import UserContext from '../../context/UserContext'
 import ProgressContext from "../../context/ProgressContext"
+import { ThreeDots } from "react-loader-spinner"
+import { useNavigate } from "react-router-dom"
 
 function Track({ habit, sequence, record, done, markHabit }) {
+    const [disable, setDisable] = useState(false)
+
     return (
         <TrackCard done={done} equals={sequence === record}>
             <div>
@@ -15,18 +19,20 @@ function Track({ habit, sequence, record, done, markHabit }) {
                 <p>Sequência atual: <span>{sequence} dias</span></p>
                 <p>Seu recorde: <span className="record">{record} dias</span></p>
             </div>
-            <div onClick={markHabit}>
-                <img src={check} alt="check" />
-            </div>
+            <button onClick={() => {setDisable(true); markHabit(setDisable);}} disabled={disable}>
+                {disable ? <ThreeDots color="#FFF" height={50} width={50} /> : <img src={check} alt="check" />}
+            </button>
         </TrackCard>
     )
 }
 
 export default function TodayTracks() {
     const [todayHabits, setTodayHabits] = useState([])
+    const [loading, setLoading] = useState(true)
     const { user } = useContext(UserContext)
     const weekDayNames = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta"]
     const { progress } = useContext(ProgressContext)
+    const navigate = useNavigate()
 
     useEffect(() => {
         getTodayHabits()
@@ -35,7 +41,7 @@ export default function TodayTracks() {
 
     function getTodayHabits() {
         const promise = axios.get(`${API_BASE_URL}/habits/today`, config(user))
-        promise.then(res => setTodayHabits(res.data))
+        promise.then(res => {setTodayHabits(res.data); setLoading(false)})
     }
 
     function formatDate() {
@@ -46,23 +52,25 @@ export default function TodayTracks() {
         return `${weekDay}, ${day}/${month}`
     }
 
-    function unCheckOrCheckHabit(id, done) {
+    function unCheckOrCheckHabit(id, done, setDisable) {
         const isDone = done ? 'uncheck' : 'check'
         const promise = axios.post(`${API_BASE_URL}/habits/${id}/${isDone}`, {}, config(user))
-        promise.catch(res => console.log(res.response.data))
+        promise.then(() => setDisable(false))
+        promise.catch(res => {alert(`Oops! algo deu errado...${res.response.data.message}`); navigate('/');})
     }
 
     return (
         <TodayContainer>
             <h1>{formatDate()}</h1>
-            {progress === 0 || todayHabits.length === 0 ? <h3>Nenhum hábito concluído ainda</h3> : <h3 className="progress">{progress}% dos hábitos concluidos </h3>}
-            {todayHabits.length === 0 ? <p>Nenhum habito para este dia...</p> : (
+            {loading ? <ThreeDots color="#126BA5" height={50} width={50} /> : ''}
+            {!loading ? progress === 0 || todayHabits.length === 0 ? <h3>Nenhum hábito concluído ainda</h3> : <h3 className="progress">{progress}% dos hábitos concluidos </h3> : ''}
+            {!loading ? todayHabits.length === 0 ? <p>Nenhum habito para este dia...</p> : (
                 <div>
                     {todayHabits.map(today => 
                         <Track key={today.id} habit={today.name} sequence={today.currentSequence} record={today.highestSequence} done={today.done} 
-                            markHabit={() => unCheckOrCheckHabit(today.id, today.done)} />)}
+                            markHabit={(setDisable) => unCheckOrCheckHabit(today.id, today.done, setDisable)} />)}
                 </div>
-            )}
+            ) : ''}
         </TodayContainer>
     )
 }
