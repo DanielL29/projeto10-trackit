@@ -5,6 +5,8 @@ import { API_BASE_URL, weekDays, config } from './../../mock/data';
 import UserContext from "../../context/UserContext";
 import { ThreeDots } from "react-loader-spinner";
 import DayCard from "../day-card/DayCard";
+import dayjs from 'dayjs'
+import ProgressContext from "../../context/ProgressContext";
 
 export default function Habits() {
     const [habits, setHabits] = useState([])
@@ -13,25 +15,29 @@ export default function Habits() {
     const [creating, setCreating] = useState(false)
     const [daysNumbers, setDaysNumbers] = useState([])
     const { user } = useContext(UserContext)
+    const { updateProgress } = useContext(ProgressContext)
     const [loading, setLoading] = useState(false)
     const [initialLoading, setInitialLoading] = useState(true)
 
     useEffect(() => {
         getHabits()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [habits])
+    }, [])
 
     const getHabits = () => axios.get(`${API_BASE_URL}/habits`, config(user)).then(res => {setHabits(res.data);  setInitialLoading(false);})
-    const deleteHabit = (id) => window.confirm('Deseja deletar este habito ?') ? axios.delete(`${API_BASE_URL}/habits/${id}`, config(user)) : false
+    const deleteHabit = (id, habitDelete) => window.confirm('Deseja deletar este habito ?') ? 
+        axios.delete(`${API_BASE_URL}/habits/${id}`, config(user)).then(() => {habits.splice(habits.indexOf(habitDelete), 1); setHabits([...habits]);}) : false
 
     function createHabit() {
         setLoading(true)
         const habit = {name, days: daysNumbers.sort((a, b) => a - b)}
         const promise = axios.post(`${API_BASE_URL}/habits`, habit, config(user))
-        promise.then(() => {
+        promise.then((res) => {
+            const haveToday = res.data.days.find(day => day === dayjs().day())
+            if(haveToday !== undefined) updateProgress()
             setLoading(false); setCreating(false);
             setDays([...days.map((day, i) => ({ id: i, name: day.name, selected: day.selected = false }))])
-            setDaysNumbers([]); setName('');
+            setDaysNumbers([]); setName(''); setHabits([...habits, res.data]);
         })
         promise.catch(res => {alert(`Oops! algo deu errado...${res.response.data}`); setLoading(false);})
     }
@@ -48,15 +54,10 @@ export default function Habits() {
                     <div>
                         {days.map((day, i) => {
                             return (
-                                <DayCard key={i} 
-                                    name={day.name} 
-                                    daysNumbers={daysNumbers} 
-                                    days={days} 
-                                    isSelected={day.selected} 
-                                    setDays={setDays} 
-                                    setDaysNumbers={setDaysNumbers} 
-                                    index={i} 
-                                    loading={loading} 
+                                <DayCard key={i} name={day.name} index={i} 
+                                    days={days} daysNumbers={daysNumbers} 
+                                    isSelected={day.selected} loading={loading} 
+                                    setDays={setDays} setDaysNumbers={setDaysNumbers} 
                                 />
                             )
                         })}
@@ -88,7 +89,7 @@ export default function Habits() {
                                     })}
                                 </div>
                             </div>
-                            <div onClick={() => deleteHabit(habit.id)}><ion-icon name="trash-outline"></ion-icon></div>
+                            <div onClick={() => deleteHabit(habit.id, habit)}><ion-icon name="trash-outline"></ion-icon></div>
                         </UserHabit>
                     )
                 })

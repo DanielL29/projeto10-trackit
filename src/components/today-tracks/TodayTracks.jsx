@@ -20,7 +20,7 @@ function Track({ habit, sequence, record, done, markHabit }) {
                 <p>Seu recorde: <span className="record">{record} dias</span></p>
             </div>
             <button onClick={() => {setDisable(true); markHabit(setDisable);}} disabled={disable}>
-                {disable ? <ThreeDots color="#FFF" height={50} width={50} /> : <img src={check} alt="check" />}
+                <img src={check} alt="check" />
             </button>
         </TrackCard>
     )
@@ -31,17 +31,17 @@ export default function TodayTracks() {
     const [loading, setLoading] = useState(true)
     const { user } = useContext(UserContext)
     const weekDayNames = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta"]
-    const { progress } = useContext(ProgressContext)
+    const { progress, updateProgress } = useContext(ProgressContext)
     const navigate = useNavigate()
 
     useEffect(() => {
         getTodayHabits()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [todayHabits])
+    }, [])
 
     function getTodayHabits() {
         const promise = axios.get(`${API_BASE_URL}/habits/today`, config(user))
-        promise.then(res => {setTodayHabits(res.data); setLoading(false)})
+        promise.then(res => {setTodayHabits(res.data); setLoading(false);})
     }
 
     function formatDate() {
@@ -52,10 +52,15 @@ export default function TodayTracks() {
         return `${weekDay}, ${day}/${month}`
     }
 
-    function unCheckOrCheckHabit(id, done, setDisable) {
+    function unCheckOrCheckHabit(id, done, setDisable, index) {
+        todayHabits[index].done = !todayHabits[index].done
+        done ? todayHabits[index].currentSequence -= 1 : todayHabits[index].currentSequence += 1
+        done ? todayHabits[index].highestSequence -= 1 : todayHabits[index].highestSequence += 1
+        done ? updateProgress(true) : updateProgress(true, true)
+        setTodayHabits([...todayHabits])
         const isDone = done ? 'uncheck' : 'check'
         const promise = axios.post(`${API_BASE_URL}/habits/${id}/${isDone}`, {}, config(user))
-        promise.then(() => setDisable(false))
+        promise.then(() => {setDisable(false); })
         promise.catch(res => {alert(`Oops! algo deu errado...${res.response.data.message}`); navigate('/');})
     }
 
@@ -66,9 +71,9 @@ export default function TodayTracks() {
             {!loading ? progress === 0 || todayHabits.length === 0 ? <h3>Nenhum hábito concluído ainda</h3> : <h3 className="progress">{progress}% dos hábitos concluidos </h3> : ''}
             {!loading ? todayHabits.length === 0 ? <p>Nenhum habito para este dia...</p> : (
                 <div>
-                    {todayHabits.map(today => 
+                    {todayHabits.map((today, i) => 
                         <Track key={today.id} habit={today.name} sequence={today.currentSequence} record={today.highestSequence} done={today.done} 
-                            markHabit={(setDisable) => unCheckOrCheckHabit(today.id, today.done, setDisable)} />)}
+                            markHabit={(setDisable) => unCheckOrCheckHabit(today.id, today.done, setDisable, i)} />)}
                 </div>
             ) : ''}
         </TodayContainer>
