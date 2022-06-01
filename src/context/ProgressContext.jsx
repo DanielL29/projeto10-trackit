@@ -5,6 +5,7 @@ const ProgressContext = createContext()
 export function ProgressProvider({ children }) {
     const [progress, setProgress] = useState(0)
     const [length, setLength] = useState(0)
+    const progressCount = Math.round(progress * length / 100)
 
     function getProgress(data) {
         let counter = 0
@@ -19,8 +20,7 @@ export function ProgressProvider({ children }) {
     }
 
     function updateProgress(doneIncrement, check) {
-        const progressCount = Math.round(progress * length / 100)
-        if(doneIncrement) {
+        if (doneIncrement) {
             const incrementProgress = check ? Math.round(((progressCount + 1) * 100) / length) : Math.round(((progressCount - 1) * 100) / length)
             setProgress(incrementProgress)
         } else {
@@ -30,8 +30,14 @@ export function ProgressProvider({ children }) {
         }
     }
 
+    function decrementProgress() {
+        const decrementProgress = Math.round(((progressCount - 1) * 100) / (length - 1))
+        setLength(length - 1)
+        setProgress(decrementProgress)
+    }
+
     return (
-        <ProgressContext.Provider value={{ progress, setProgress, getProgress, updateProgress }}>
+        <ProgressContext.Provider value={{ progress, setProgress, getProgress, updateProgress, decrementProgress }}>
             {children}
         </ProgressContext.Provider>
     )

@@ -7,6 +7,7 @@ import { ThreeDots } from "react-loader-spinner";
 import DayCard from "../day-card/DayCard";
 import dayjs from 'dayjs'
 import ProgressContext from "../../context/ProgressContext";
+import { createHabit } from "../../functions/habits";
 
 export default function Habits() {
     const [habits, setHabits] = useState([])
@@ -15,7 +16,7 @@ export default function Habits() {
     const [creating, setCreating] = useState(false)
     const [daysNumbers, setDaysNumbers] = useState([])
     const { user } = useContext(UserContext)
-    const { updateProgress } = useContext(ProgressContext)
+    const { updateProgress, decrementProgress } = useContext(ProgressContext)
     const [loading, setLoading] = useState(false)
     const [initialLoading, setInitialLoading] = useState(true)
 
@@ -25,22 +26,17 @@ export default function Habits() {
     }, [])
 
     const getHabits = () => axios.get(`${API_BASE_URL}/habits`, config(user)).then(res => {setHabits(res.data);  setInitialLoading(false);})
-    const deleteHabit = (id, habitDelete) => window.confirm('Deseja deletar este habito ?') ? 
-        axios.delete(`${API_BASE_URL}/habits/${id}`, config(user)).then(() => {habits.splice(habits.indexOf(habitDelete), 1); setHabits([...habits]);}) : false
 
-    function createHabit() {
-        setLoading(true)
-        const habit = {name, days: daysNumbers.sort((a, b) => a - b)}
-        const promise = axios.post(`${API_BASE_URL}/habits`, habit, config(user))
-        promise.then((res) => {
-            const haveToday = res.data.days.find(day => day === dayjs().day())
-            if(haveToday !== undefined) updateProgress()
-            setLoading(false); setCreating(false);
-            setDays([...days.map((day, i) => ({ id: i, name: day.name, selected: day.selected = false }))])
-            setDaysNumbers([]); setName(''); setHabits([...habits, res.data]);
-        })
-        promise.catch(res => {alert(`Oops! algo deu errado...${res.response.data}`); setLoading(false);})
-    }
+    function deleteHabit(id, habitDelete) {
+        if(window.confirm('Deseja deletar este habito ?')) {
+            axios.delete(`${API_BASE_URL}/habits/${id}`, config(user)).then(() => {
+                const haveToday = habitDelete.days.find(day => day === dayjs().day())
+                if(haveToday !== undefined) decrementProgress()
+                habits.splice(habits.indexOf(habitDelete), 1)
+                setHabits([...habits])
+            })
+        }
+    } 
 
     return (
         <HabitsContainer>
@@ -54,17 +50,17 @@ export default function Habits() {
                     <div>
                         {days.map((day, i) => {
                             return (
-                                <DayCard key={i} name={day.name} index={i} 
-                                    days={days} daysNumbers={daysNumbers} 
-                                    isSelected={day.selected} loading={loading} 
-                                    setDays={setDays} setDaysNumbers={setDaysNumbers} 
-                                />
+                                <DayCard key={i} name={day.name} index={i} days={days} daysNumbers={daysNumbers} 
+                                    isSelected={day.selected} loading={loading} setDays={setDays} setDaysNumbers={setDaysNumbers} />
                             )
                         })}
                     </div>
                     <Buttons>
                         <button onClick={() => setCreating(false)} disabled={loading}>Cancelar</button>
-                        <button onClick={createHabit} disabled={loading}>
+                        <button onClick={() => createHabit(
+                            name, days, habits, updateProgress, user, daysNumbers,
+                            setLoading, config, setDays, setDaysNumbers, setName, setCreating, setHabits
+                        )} disabled={loading}>
                             {loading ? <ThreeDots color="#FFF" height={50} width={50} /> : 'Salvar'}
                         </button>
                     </Buttons>
